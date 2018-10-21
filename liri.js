@@ -27,19 +27,19 @@ let options = {
         name: "movieName"
     },
     //"4. Demo":{func:doWhatItSays()}
-    
+
 }
 
 function continueQuery() {
     inquirer.prompt(
-    {
-        message: 'Would you like back to the main menu? Y/N',
-        name: 'endQuery',
-        type: 'confirm',
-    }).then(continueQ => {
-        if (continueQ.endQuery) start();
+        {
+            message: 'Would you like back to the main menu? Y/N',
+            name: 'endQuery',
+            type: 'confirm',
+        }).then(continueQ => {
+            if (continueQ.endQuery) start();
         });
-     }
+}
 
 function mainMenu() {
     console.log(`
@@ -50,22 +50,23 @@ ${chalk.magenta(`MAIN MENU`)}
         type: 'list',
         name: 'option',
         message: 'Please select an option: ',
-        choices:['1. Demos', '2. Get info!', '3. Exit']})
-        .then(choice=>{
+        choices: ['1. Demos', '2. Get Info!', '3. Exit']
+    })
+        .then(choice => {
             switch (choice.option) {
                 case '1. Demos':
-
                     demoMenu();
                     break;
-                case '2. Get Info!':                    
+                case '2. Get Info!':
                     start();
                     break;
                 case '3. Exit':
                     break;
+
                 default: console.log("Please select an option.");
-        }
-    });
-    
+            }
+        });
+
 }
 
 function demoMenu() {
@@ -77,30 +78,32 @@ ${chalk.magenta(`DEMO MENU`)}
         type: 'list',
         name: 'option',
         message: 'Please select an option: ',
-        choices:['1. Song Demo', '2. Movie Demo', '3. Spotify Demo', '4. Go back to Main Menu', '5. Exit']})
-        .then(choice=>{
+        choices: ['1. Song Demo', '2. Movie Demo', '3. Spotify Demo', '4. Go back to Main Menu', '5. Exit']
+    })
+        .then(choice => {
             console.log("why?");
-            switch (choice.option ) {
-                case  '1. Song Demo':
+            switch (choice.option) {
+                case '1. Song Demo':
                     doWhatItSays();
                     break;
-                case  '2. Movie Demo':
+                case '2. Movie Demo':
                     doWhatItSays();
                     break;
-                case  '3. Spotify Demo':
+                case '3. Spotify Demo':
                     doWhatItSays();
                     break;
-                case choice.option==='4. Go back to Main Menu':
+                case choice.option === '4. Go back to Main Menu':
                     mainMenu();
                     break;
-                case choice.option==='5. Exit':
+                case choice.option === '5. Exit':
                     break;
                 //default: mainMenu();
-        }
-    });
+            }
+        });
 }
 
 function start() {
+    console.log(Object.keys(options));
     inquirer.prompt({
         type: 'list',
         name: 'option',
@@ -109,7 +112,8 @@ function start() {
     }).then(choice => {
         inquirer.prompt(options[choice.option]).then(answers => {
             switch (choice.option) {
-                case  "1. Find about your favorite bands' concerts":
+
+                case "1. Find about your favorite bands' concerts":
                     concertThis(answers['artistName']);
                     break;
 
@@ -123,7 +127,7 @@ function start() {
 
                 default: continueQuery();
             }
-        
+
         });
     })
 }
@@ -131,14 +135,16 @@ function start() {
 
 
 function concertThis(answers) {
-    var url = `https://rest.bandsintown.com/artists/"${answers}"/events?app_id=b2b1d13e2f579627ed525e0f00cf2713`;
+    console.log(answers);
+    var url = `https://rest.bandsintown.com/artists/${answers}/events?app_id=b2b1d13e2f579627ed525e0f00cf2713`;
 
     request(url, (err, res, body) => {
+        console.log(body);
         if (!err && res.statusCode === 200) {
+            console.log("it won't break");
             var obj = JSON.parse(body);
-            if(obj=undefined){
+            if (obj === undefined) {
                 console.log("Try a different artist.");
-
             }
             for (i = 0; i < obj.length; i++) {
                 var newTime = obj[i].datetime;
@@ -153,7 +159,7 @@ ${chalk.blue.bold(`* Name of venue: ${obj[i].venue.name}
             }
         }
         continueQuery();
-});
+    });
 }
 
 
@@ -186,7 +192,7 @@ ${chalk.blue.bold(`* Year movie came out is: ${json.Year}
 * IMDB movie rating: ${json.imdbRating} 
 * Country of production: ${json.Country}
 * Movie plot: ${json.Plot}
-* Movie Actors: ${json.Actors}\n`)}`); 
+* Movie Actors: ${json.Actors}\n`)}`);
         }
         continueQuery();
     });
@@ -195,16 +201,14 @@ ${chalk.blue.bold(`* Year movie came out is: ${json.Year}
 function doWhatItSays() {
     fs.readFile("./random.txt", "utf8", (err, body) => {
         if (err) throw err;
-        answers=body;
-        console.log(answers);
-        spotifyThisSong(answers);
+        spotifyThisSong(body);
     });
 }
 
-function logText(responses){
-    fs.appendFile("log.txt",responses,(err)=>{
-    if (err) throw err;
-});
+function logText(responses) {
+    fs.appendFile("log.txt", responses, (err) => {
+        if (err) throw err;
+    });
 }
 
 mainMenu();
