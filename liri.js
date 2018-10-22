@@ -14,7 +14,8 @@ let options = {
     "1. Find about your favorite bands' concerts": {
         type: "input",
         message: "Please enter an artist?",
-        name: "artistName"
+        name: "artistName",
+        default: "undefined"
     },
     "2. Get spotify info about songs you like": {
         type: "input",
@@ -28,7 +29,9 @@ let options = {
         name: "movieName",
         default: "Mr. Nobody"
     },
-    "4. Get demo":{}
+    "4. Get demo":{},
+
+    "5. Exit":{},
 
 }
 
@@ -43,8 +46,8 @@ function continueQuery() {
         });
 }
 
-function mainMenu() {
-    console.log(`
+function start() {
+console.log(`
 ======================
 ${chalk.magenta(`MAIN MENU`)}
 ======================`);
@@ -52,69 +55,11 @@ ${chalk.magenta(`MAIN MENU`)}
         type: 'list',
         name: 'option',
         message: 'Please select an option: ',
-        choices: ['1. Demos', '2. Get Info!', '3. Exit']
-    })
-        .then(choice => {
-            switch (choice.option) {
-                case '1. Demos':
-                    demoMenu();
-                    break;
-                case '2. Get Info!':
-                    start();
-                    break;
-                case '3. Exit':
-                    break;
-
-                default: console.log("Please select an option.");
-            }
-        });
-
-}
-
-function demoMenu() {
-    console.log(`
-======================
-${chalk.magenta(`DEMO MENU`)}
-======================`);
-    inquirer.prompt({
-        type: 'list',
-        name: 'option',
-        message: 'Please select an option: ',
-        choices: ['1. Song Demo', '2. Movie Demo', '3. Spotify Demo', '4. Go back to Main Menu', '5. Exit']
-    })
-        .then(choice => {
-            console.log("why?");
-            switch (choice.option) {
-                case '1. Song Demo':
-                    doWhatItSays();
-                    break;
-                case '2. Movie Demo':
-                    doWhatItSays();
-                    break;
-                case '3. Spotify Demo':
-                    doWhatItSays();
-                    break;
-                case choice.option === '4. Go back to Main Menu':
-                    mainMenu();
-                    break;
-                case choice.option === '5. Exit':
-                    break;
-                //default: mainMenu();
-            }
-        });
-}
-
-function start() {
-    inquirer.prompt({
-        type: 'list',
-        name: 'option',
-        message: 'Please select an option: ',
         choices: Object.keys(options)
     }).then(choice => {
         
-        if(choice.option==="4. Get demo"){
-            doWhatItSays();
-        }
+        if(choice.option==="4. Get demo") doWhatItSays();
+        else if(choice.option==="5. Exit") return false;
         else{
         inquirer.prompt(options[choice.option]).then(answers => {
             switch (choice.option) {
@@ -145,23 +90,22 @@ function concertThis(answers) {
     request(url, (err, res, body) => {
         console.log(body);
         if (!err && res.statusCode === 200) {
-            console.log("it won't break");
             var obj = JSON.parse(body);
             if (obj === undefined || obj.error) {
                 console.log("Try a different artist.");
                 //handle user mispelling name
                 start();//Cam eyebrown raise
             }
-            for (i = 0; i < obj.length; i++) {
+            for (var i = 0; i < obj.length; i++) {
                 var newTime = obj[i].datetime;
                 newTime = moment(newTime).format("MM/DD/YYYY");
                 console.log(`
 ==================================================
-${obj[i].lineup} event number ${i}
+${chalk.magenta.bold(`${obj[i].lineup} event number ${i}`)}
 ==================================================
-${chalk.blue.bold(`* Name of venue: ${obj[i].venue.name}
-* Location of venue: ${obj[i].venue.country}, ${obj[i].venue.city}
-* Date of event: ${newTime}\n`)}`);
+* Name of venue: ${chalk.bold.blue(obj[i].venue.name)}
+* Location of venue: ${chalk.bold.blue(obj[i].venue.country)}, ${chalk.bold.blue(obj[i].venue.city)}
+* Date of event: ${chalk.bold.blue(newTime)}\n`);
             }
         }
         continueQuery();
@@ -177,12 +121,12 @@ function spotifyThisSong(answers) {
         if (err) throw err;
         console.log(`
 =========================================================
-Info regarding the song ${body.tracks.items[0].name}
+${chalk.magenta.bold(`Info regarding the song ${body.tracks.items[0].name}`)}
 =========================================================
-${chalk.blue.bold(`* Artist: ${body.tracks.items[0].artists[0].name}
-* Name of song: ${body.tracks.items[0].name}
-* To play the song click on the following link: ${chalk.magenta.underline(`${body.tracks.items[0].preview_url}`)}
-* The song's album is called: ${body.tracks.items[0].album.name}\n`)}`);
+* Artist: ${chalk.bold.blue(body.tracks.items[0].artists[0].name)}
+* Name of song: ${chalk.bold.blue(body.tracks.items[0].name)}
+* To play the song click on the following link: ${chalk.magenta.underline(body.tracks.items[0].preview_url)}
+* The song's album is called: ${chalk.bold.blue(body.tracks.items[0].album.name)}\n`);
         continueQuery();
     });
 }
@@ -223,4 +167,4 @@ function logText(responses) {
     });
 }
 
-mainMenu();
+start();
