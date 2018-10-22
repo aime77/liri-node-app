@@ -23,10 +23,10 @@ The MAIN MENU has 5 options:
 ## Option 4 (Get demo)<h2>
 * Previews option 2
 
-## Option 5 (Exit)<h2>:
+## Option 5 (Exit)<h2>
 * Exits the app
 
-## EXTRA <h2>:
+## EXTRA <h2>
 * Information is saved in a log.txt file
 * Click on the following link for a video of the typical user flow through this application:https://docs.google.com/document/d/13H4kwBn9um8yXhq9RRMObmBKDZD4ozhgFxKMy9s1eBA/edit?usp=sharing
 
