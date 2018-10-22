@@ -729,3 +729,22 @@ Info regarding the song Hello
 * Name of song: Hello
 * To play the song click on the following link: https://p.scdn.co/mp3-preview/0b90429fd554bad6785faa2b8931d613db4a0ee4?cid=2c3e89aa22c54d1b89051ab1de0d14e3
 * The song's album is called: 25
+
+=========================================================
+Info regarding the song The Sign
+=========================================================
+* Artist: Ace of Base
+* Name of song: The Sign
+* To play the song click on the following link: https://p.scdn.co/mp3-preview/4c463359f67dd3546db7294d236dd0ae991882ff?cid=2c3e89aa22c54d1b89051ab1de0d14e3
+* The song's album is called: The Sign (US Album) [Remastered]
+
+============================================
+Info about Mr. Nobody
+============================================
+* Year movie came out is: 2009
+* IMDB movie rating: 7.9 
+* Rotten Tomatoes rating: N/A
+* Country of production: Belgium, Germany, Canada, France, USA, UK
+* Country of production: English, Mohawk
+* Movie plot: A boy stands on a station platform as a train is about to leave. Should he go with his mother or stay with his father? Infinite possibilities arise from this decision. As long as he doesn't choose, anything is possible.
+* Movie Actors: Jared Leto, Sarah Polley, Diane Kruger, Linh Dan Pham

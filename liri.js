@@ -176,7 +176,7 @@ ${chalk.magenta.bold(`Info about ${json.Title}`)}
 * IMDB movie rating: ${chalk.bold.blue(json.imdbRating)} 
 * Rotten Tomatoes rating: ${chalk.bold.blue(json.tomatoRating)}
 * Country of production: ${chalk.bold.blue(json.Country)}
-* Country of production: ${chalk.bold.blue(json.Language)}
+* Language: ${chalk.bold.blue(json.Language)}
 * Movie plot: ${chalk.bold.blue(json.Plot)}
 * Movie Actors: ${chalk.bold.blue(json.Actors)}\n`;
 
@@ -188,7 +188,7 @@ Info about ${json.Title}
 * IMDB movie rating: ${json.imdbRating} 
 * Rotten Tomatoes rating: ${json.tomatoRating}
 * Country of production: ${json.Country}
-* Country of production: ${json.Language}
+* Language: ${json.Language}
 * Movie plot: ${json.Plot}
 * Movie Actors: ${json.Actors}\n`;
 
