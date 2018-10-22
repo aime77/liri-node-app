@@ -19,21 +19,23 @@ let options = {
     "2. Get spotify info about songs you like": {
         type: "input",
         message: "Enter song: ",
-        name: "songName"
+        name: "songName",
+        default: "The Ace"
     },
     "3. Get info about any movie": {
         type: "input",
         message: "Please enter the movie's name: ",
-        name: "movieName"
+        name: "movieName",
+        default: "Mr. Nobody"
     },
-    //"4. Demo":{func:doWhatItSays()}
+    "4. Get demo":{}
 
 }
 
 function continueQuery() {
     inquirer.prompt(
         {
-            message: 'Would you like back to the main menu? Y/N',
+            message: 'Would you like back to the main menu?',
             name: 'endQuery',
             type: 'confirm',
         }).then(continueQ => {
@@ -103,13 +105,17 @@ ${chalk.magenta(`DEMO MENU`)}
 }
 
 function start() {
-    console.log(Object.keys(options));
     inquirer.prompt({
         type: 'list',
         name: 'option',
         message: 'Please select an option: ',
         choices: Object.keys(options)
     }).then(choice => {
+        
+        if(choice.option==="4. Get demo"){
+            doWhatItSays();
+        }
+        else{
         inquirer.prompt(options[choice.option]).then(answers => {
             switch (choice.option) {
 
@@ -127,15 +133,13 @@ function start() {
 
                 default: continueQuery();
             }
-
+        
         });
+    }
     })
 }
 
-
-
 function concertThis(answers) {
-    console.log(answers);
     var url = `https://rest.bandsintown.com/artists/${answers}/events?app_id=b2b1d13e2f579627ed525e0f00cf2713`;
 
     request(url, (err, res, body) => {
@@ -143,15 +147,17 @@ function concertThis(answers) {
         if (!err && res.statusCode === 200) {
             console.log("it won't break");
             var obj = JSON.parse(body);
-            if (obj === undefined) {
+            if (obj === undefined || obj.error) {
                 console.log("Try a different artist.");
+                //handle user mispelling name
+                start();//Cam eyebrown raise
             }
             for (i = 0; i < obj.length; i++) {
                 var newTime = obj[i].datetime;
                 newTime = moment(newTime).format("MM/DD/YYYY");
                 console.log(`
 ==================================================
-${obj[i].lineup} EVENT NUMBER ${i}
+${obj[i].lineup} event number ${i}
 ==================================================
 ${chalk.blue.bold(`* Name of venue: ${obj[i].venue.name}
 * Location of venue: ${obj[i].venue.country}, ${obj[i].venue.city}
@@ -164,11 +170,14 @@ ${chalk.blue.bold(`* Name of venue: ${obj[i].venue.name}
 
 
 function spotifyThisSong(answers) {
+        if(answers===" "){
+            doWhatItSays(song[1]);
+        }
     spotify.search({ type: 'track', query: answers, limit: 20 }, (err, body) => {
         if (err) throw err;
         console.log(`
 =========================================================
-INFO REGARDING THE SONG ${body.tracks.items[0].name}
+Info regarding the song ${body.tracks.items[0].name}
 =========================================================
 ${chalk.blue.bold(`* Artist: ${body.tracks.items[0].artists[0].name}
 * Name of song: ${body.tracks.items[0].name}
@@ -180,19 +189,21 @@ ${chalk.blue.bold(`* Artist: ${body.tracks.items[0].artists[0].name}
 
 
 function movieThis(answers) {
-    var queryURL = `http://www.omdbapi.com/?t=${answers}&y=&plot=short&apikey=trilogy`;
+    var queryURL = `http://www.omdbapi.com/?t=${answers}&y=&plot=short&tomatoes=true&apikey=trilogy`;
     request(queryURL, (err, res, body) => {
         if (!err && res.statusCode === 200) {
             json = JSON.parse(body);
             console.log(`
 ============================================
-INFORMATION ABOUT ${json.Title}
+${chalk.magenta.bold(`Info about ${json.Title}`)}
 ============================================
-${chalk.blue.bold(`* Year movie came out is: ${json.Year}
-* IMDB movie rating: ${json.imdbRating} 
-* Country of production: ${json.Country}
-* Movie plot: ${json.Plot}
-* Movie Actors: ${json.Actors}\n`)}`);
+* Year movie came out is: ${chalk.bold.blue(json.Year)}
+* IMDB movie rating: ${chalk.bold.blue(json.imdbRating)} 
+* Rotten Tomatoes rating: ${chalk.bold.blue(json.tomatoRating)}
+* Country of production: ${chalk.bold.blue(json.Country)}
+* Country of production: ${chalk.bold.blue(json.Language)}
+* Movie plot: ${chalk.bold.blue(json.Plot)}
+* Movie Actors: ${chalk.bold.blue(json.Actors)}\n`);
         }
         continueQuery();
     });
@@ -201,7 +212,8 @@ ${chalk.blue.bold(`* Year movie came out is: ${json.Year}
 function doWhatItSays() {
     fs.readFile("./random.txt", "utf8", (err, body) => {
         if (err) throw err;
-        spotifyThisSong(body);
+        var song=body.split("\n");
+        spotifyThisSong(song[0]);
     });
 }
 
