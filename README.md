@@ -28,5 +28,5 @@ The MAIN MENU has 5 options:
 
 ## EXTRA <h2>
 * Information is saved in a log.txt file
-* Click on the following link for a video of the typical user flow through this application:https://docs.google.com/document/d/13H4kwBn9um8yXhq9RRMObmBKDZD4ozhgFxKMy9s1eBA/edit?usp=sharing
+* Click on the following link for a video of the typical user flow through this application:https://youtu.be/69rdWog0zKc
 
